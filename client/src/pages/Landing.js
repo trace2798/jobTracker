@@ -1,13 +1,15 @@
 import React from "react";
-import logo from "../assets/images/logo.svg";
 import main from "../assets/images/main.svg";
 import Wrapper from "../assets/wrappers/LandingPage";
+import {Logo} from '../components'
+import { Link } from 'react-router-dom'
 
 const Landing = () => {
   return (
     <Wrapper>
       <nav>
-        <img src={logo} alt="jobify" className="logo" />
+        <Logo/>
+        </nav>
         <div className="container page">
           {/* info */}
           <div className="info">
@@ -20,14 +22,13 @@ const Landing = () => {
               quinoa lo-fi tote bag adaptogen everyday carry meggings +1 brunch
               narwhal.
             </p>
-            {/* <Link to="/register" className="btn btn-hero">
+            <Link to="/register" className="btn btn-hero">
               Login/Register
-            </Link> */}
-            <button className="btn btn-hero">Login/Register</button>
+            </Link>
+            {/* <button className="btn btn-hero">Login/Register</button> */}
           </div>
           <img src={main} alt="job hunt" className="img main-img" />
         </div>
-      </nav>
     </Wrapper>
   );
 };

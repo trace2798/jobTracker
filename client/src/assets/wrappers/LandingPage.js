@@ -10,11 +10,11 @@ const Wrapper = styled.main`
     align-items: center;
   }
   .page {
-    // min-height: calc(100vh - var(--nav-height));
-    min-height: 100vh;
+    min-height: calc(100vh - var(--nav-height));
+    // min-height: 100vh;
     display: grid;
     align-items: center;
-    margin-top: 70vh;
+    margin-top: 0vh;
   }
   h1 {
     font-weight: 700;
