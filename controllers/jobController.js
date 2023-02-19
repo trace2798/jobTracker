@@ -1,3 +1,5 @@
+import Job from '../models/Job.js';
+
 const createJob = async (req, res) => {
   res.send(" Create Job");
 };
