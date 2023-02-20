@@ -3,7 +3,7 @@ import express from "express";
 const app = express();
 import dotenv from "dotenv";
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "./.env.local" });
 
 //importing routes
 import authRouter from "./routes/authRoutes.js";
@@ -18,7 +18,12 @@ import errorHandlerMiddleware from "./middleware/error-handler.js";
 
 /* This will make json data available for us in the controller. */
 app.use(express.json());
-
+console.log('From Server');
+console.log('From Server');
+console.log('From Server');
+console.log('From Server');
+console.log('From Server');
+console.log('From Server');
 app.get("/", (req, res) => {
   res.send("Welcome!");
 });
