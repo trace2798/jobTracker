@@ -19,13 +19,13 @@ import errorHandlerMiddleware from "./middleware/error-handler.js";
 /* This will make json data available for us in the controller. */
 app.use(express.json());
 console.log('From Server');
-console.log('From Server');
-console.log('From Server');
-console.log('From Server');
-console.log('From Server');
-console.log('From Server');
+
 app.get("/", (req, res) => {
   res.send("Welcome!");
+});
+
+app.get("/api/v1", (req, res) => {
+  res.json("API!");
 });
 
 //auth Route
