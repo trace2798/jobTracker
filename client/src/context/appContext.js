@@ -4,9 +4,12 @@ import axios from "axios";
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
-  SETUP_USER_BEGIN,
-  SETUP_USER_SUCCESS,
-  SETUP_USER_ERROR,
+  REGISTER_USER_BEGIN,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_ERROR,
+  LOGIN_USER_BEGIN,
+  LOGIN_USER_ERROR,
+  LOGIN_USER_SUCCESS,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -61,7 +64,7 @@ const AppProvider = ({ children }) => {
 
   //async because we will make a fetch call and pass in the object which is currentUser.
   const registerUser = async (currentUser) => {
-    dispatch({ type: SETUP_USER_BEGIN });
+    dispatch({ type: REGISTER_USER_BEGIN });
     try {
       /**
        * Sends a POST request to the server to register the current user.
@@ -73,7 +76,7 @@ const AppProvider = ({ children }) => {
       const { user, token, location } = response.data;
       // Dispatch an action to set up the user.
       dispatch({
-        type: SETUP_USER_SUCCESS,
+        type: REGISTER_USER_SUCCESS,
         payload: {
           user,
           token,
@@ -90,7 +93,28 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       console.log(error.response);
       dispatch({
-        type: SETUP_USER_ERROR,
+        type: REGISTER_USER_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+  const loginUser = async (currentUser) => {
+    dispatch({ type: LOGIN_USER_BEGIN });
+    try {
+      const { data } = await axios.post("/api/v1/auth/login", currentUser);
+      const { user, token, location } = data;
+
+      dispatch({
+        type: LOGIN_USER_SUCCESS,
+        payload: { user, token, location },
+      });
+
+      addUserToLocalStorage({ user, token, location });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_USER_ERROR,
         payload: { msg: error.response.data.msg },
       });
     }
@@ -103,6 +127,7 @@ const AppProvider = ({ children }) => {
         ...state,
         displayAlert,
         registerUser,
+        loginUser,
       }}
     >
       {children}
