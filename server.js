@@ -1,9 +1,10 @@
-import 'express-async-errors';
+import "express-async-errors";
 import express from "express";
 const app = express();
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env.local" });
+import morgan from "morgan";
 
 //importing routes
 import authRouter from "./routes/authRoutes.js";
@@ -16,9 +17,12 @@ import mongoose from "mongoose";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 /* This will make json data available for us in the controller. */
 app.use(express.json());
-console.log('From Server');
+console.log("From Server");
 
 app.get("/", (req, res) => {
   res.send("Welcome!");

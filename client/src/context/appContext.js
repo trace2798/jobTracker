@@ -9,15 +9,19 @@ import {
   SETUP_USER_ERROR,
 } from "./actions";
 
+const token = localStorage.getItem("token");
+const user = localStorage.getItem("user");
+const userLocation = localStorage.getItem("location");
+
 export const initialState = {
   isLoading: false,
   showAlert: false,
   alertText: "",
   alertType: "",
-  user: null,
-  token: null,
-  userLocation: "",
-  jobLocation: "",
+  user: user ? JSON.parse(user) : null,
+  token: token,
+  userLocation: userLocation || "",
+  jobLocation: userLocation || "",
 };
 const AppContext = React.createContext();
 
@@ -26,17 +30,13 @@ const AppProvider = ({ children }) => {
   // Is a declaration of a state and dispatch function using the useReducer hook in React.
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  /**
-   * When the user clicks the button, display the alert and then clear the alert.
-   */
+  // When the user clicks the button, display the alert and then clear the alert.
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
   };
 
-  /**
-   * After 3 seconds, dispatch an action to clear the alert.
-   */
+  // After 3 seconds, dispatch an action to clear the alert.
   const clearAlert = () => {
     setTimeout(() => {
       dispatch({
@@ -45,20 +45,33 @@ const AppProvider = ({ children }) => {
     }, 3000);
   };
 
+  // Adds the user, token, and location to local storage.
+  const addUserToLocalStorage = ({ user, token, location }) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("location", location);
+  };
+
+  // Adds the user, token, and location to local storage.
+  const removeUserFromLocalStorage = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("location");
+  };
+
   //async because we will make a fetch call and pass in the object which is currentUser.
   const registerUser = async (currentUser) => {
     dispatch({ type: SETUP_USER_BEGIN });
     try {
       /**
-       * Sends a POST request to the server to register the current user.           
-       * @param {User} currentUser - the current user object.           
-       * @returns {Promise<AxiosResponse<any>>} - the response from the server.           
+       * Sends a POST request to the server to register the current user.
+       * @param {User} currentUser - the current user object. @returns {Promise<AxiosResponse<any>>} - the response from the server.
        */
       const response = await axios.post("/api/v1/auth/register", currentUser);
       console.log(response);
-      // @param {object} response - the response object from the API call. @returns {object} - the user object from the response.           
+      // @param {object} response - the response object from the API call. @returns {object} - the user object from the response.
       const { user, token, location } = response.data;
-      // Dispatch an action to set up the user.                    
+      // Dispatch an action to set up the user.
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: {
@@ -68,12 +81,12 @@ const AppProvider = ({ children }) => {
         },
       });
 
-      // will add later
-      // addUserToLocalStorage({
-      //   user,
-      //   token,
-      //   location,
-      // })
+      /* Adding the user, token, and location to local storage. */
+      addUserToLocalStorage({
+        user,
+        token,
+        location,
+      });
     } catch (error) {
       console.log(error.response);
       dispatch({
