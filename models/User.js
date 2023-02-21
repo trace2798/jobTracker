@@ -41,9 +41,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 
-UserSchema.pre('save', async function (next) {
-  // this.password = await bcrypt.hash(this.password, 12);
-  // next();
+UserSchema.pre('save', async function () {
+  //console.log(this.modifiedPaths());
+  if(!this.isModified('password')) return 
+    this.password = await bcrypt.hash(this.password, 12);
 });
 
 UserSchema.methods.createJWT = function () {
