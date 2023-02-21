@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import {
   BadRequestError,
   NotFoundError,
-  UnauthenticatedError,
+  UnAuthenticatedError,
 } from "../errors/index.js";
 
 const register = async (req, res) => {
@@ -34,24 +34,6 @@ const register = async (req, res) => {
   });
 };
 
-// const register = async (req, res, next) => {
-//   if (!name || !email || !password) {
-//     throw new BadRequestError("Provide all values");
-//   }
-//   const userAlreadyExists = await User.findOne({ email });
-//   if (userAlreadyExists) {
-//     throw new BadRequestError("Account with this email already exists");
-//   }
-
-//   const newUser = await User.create({
-//     name: req.body.name,
-//     email: req.body.email,
-//     password: req.body.password,
-//   });
-//   newUser.createJWT()
-//   res.status(StatusCodes.CREATED).json({ newUser });
-// };
-
 // We're finding a user by email, selecting the password field, comparing the password, and then creating a JWT token.
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -62,19 +44,48 @@ const login = async (req, res) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    throw new UnauthenticatedError("Invalid Credentials");
+    throw new UnAuthenticatedError("Invalid Credentials");
   }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new UnauthenticatedError("Invalid Credentials");
+    throw new UnAuthenticatedError("Invalid Credentials");
   }
   const token = user.createJWT();
   user.password = undefined;
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
+
+// const updateUser = async (req, res) => {
+//   console.log(req.user);
+//   res.send("User updated successfully");
+// }
+
 const updateUser = async (req, res) => {
-  console.log(req.user);
-  res.send("User updated successfully");
+  const { email, name, lastName, location } = req.body;
+  //no password because this is not update password route.
+  if (!email || !name || !lastName || !location) {
+    throw new BadRequestError('Please provide all values');
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+
+  user.email = email;
+  user.name = name;
+  user.lastName = lastName;
+  user.location = location;
+
+  await user.save();
+
+  // various setups
+  // in this case only id
+  // if other properties included, must re-generate
+
+  const token = user.createJWT();
+  res.status(StatusCodes.CREATED).json({
+    user,
+    token,
+    location: user.location,
+  });
 };
 
 export { register, login, updateUser };

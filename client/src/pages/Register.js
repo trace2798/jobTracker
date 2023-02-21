@@ -54,7 +54,11 @@ const Register = () => {
       registerUser(currentUser);
     }
   };
-
+  {
+  /* This code uses the React Hook useEffect to run a function when the component is mounted or updated. 
+  The function checks if the user variable is truthy and, if so, sets a timeout of 3 seconds before navigating to the "/" route.
+  The dependencies array ([user, navigate]) ensures that the effect will only run when either user or navigate changes. */
+  }
   useEffect(() => {
     if (user) {
       setTimeout(() => {
