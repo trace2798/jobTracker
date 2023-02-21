@@ -7,7 +7,6 @@ import Logo from "./Logo";
 
 export const SmallSidebar = () => {
   const { showSidebar, toggleSidebar } = useAppContext();
-
   return (
     <Wrapper>
       <div
