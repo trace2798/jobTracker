@@ -1,9 +1,10 @@
 import Wrapper from "../assets/wrappers/SmallSidebar";
 import { FaTimes } from "react-icons/fa";
 import { useAppContext } from "../context/appContext";
-import links from "../utils/links";
-import { NavLink } from "react-router-dom";
+// import links from "../utils/links";
+// import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
+import NavLinks from "./NavLinks";
 
 export const SmallSidebar = () => {
   const { showSidebar, toggleSidebar } = useAppContext();
@@ -21,7 +22,9 @@ export const SmallSidebar = () => {
           <header>
             <Logo />
           </header>
-          <div className="nav-links">
+          {/* we need to pass in toggleSidebar because the component is looking for it and without it the functionality will not work. */}
+          <NavLinks toggleSidebar={toggleSidebar}/>
+          {/* <div className="nav-links">
             {links.map((link) => {
               const { text, path, id, icon } = link;
 
@@ -39,7 +42,7 @@ export const SmallSidebar = () => {
                 </NavLink>
               );
             })}
-          </div>
+          </div> */}
         </div>
       </div>
     </Wrapper>
