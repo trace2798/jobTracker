@@ -62,6 +62,26 @@ const AddJob = () => {
             handleChange={handleJobInput}
           />
 
+          {/* job type */}
+          <div className="form-row">
+            <label>job type</label>
+            <select
+              name="jobType"
+              value={jobType}
+              handleChange={handleJobInput}
+              className="form-select"
+            >
+              {/* default value in the state is full-time */}
+              {jobTypeOptions.map((jobtype, index) => {
+                return (
+                  <option key={index} value={jobtype}>
+                    {jobtype}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+
           <div>
             <button
               className="btn btn-block submit-btn"
