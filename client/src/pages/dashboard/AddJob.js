@@ -133,7 +133,7 @@ const AddJob = () => {
             >
               submit
             </button>
-
+            {/* preventDefault without it the page will refresh */}
             <button
               className="btn btn-block clear-btn"
               onClick={(e) => {
