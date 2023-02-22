@@ -6,6 +6,7 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 const AddJob = () => {
   const {
     isEditing,
+    editJob,
     showAlert,
     displayAlert,
     position,
@@ -27,7 +28,8 @@ const AddJob = () => {
       return;
     }
     if(isEditing) {
-      return ;
+      editJob() ;
+      return;
     }
     createJob();
   };
