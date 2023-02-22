@@ -16,6 +16,7 @@ const AddJob = () => {
     status,
     statusOptions,
     handleChange,
+    clearValues,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -111,13 +112,23 @@ const AddJob = () => {
             list={statusOptions}
           /> */}
 
-          <div>
+          <div className="btn-container">
             <button
               className="btn btn-block submit-btn"
               type="submit"
               onClick={handleSubmit}
             >
               submit
+            </button>
+
+            <button
+              className="btn btn-block clear-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                clearValues()
+              }}
+            >
+              clear
             </button>
           </div>
         </div>

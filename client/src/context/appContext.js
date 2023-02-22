@@ -16,6 +16,7 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
+  CLEAR_VALUES,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -32,16 +33,16 @@ export const initialState = {
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
-  //we will have the option to edit the job fields. 
+  //we will have the option to edit the job fields.
   isEditing: false,
-  editJobId: '',
-  position: '',
-  company: '',
+  editJobId: "",
+  position: "",
+  company: "",
   // jobLocation is already on top
-  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
-  jobType: 'full-time',
-  statusOptions: ['pending', 'interview', 'declined'],
-  status: 'pending',
+  jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
+  jobType: "full-time",
+  statusOptions: ["pending", "interview", "declined"],
+  status: "pending",
 };
 const AppContext = React.createContext();
 
@@ -65,7 +66,7 @@ const AppProvider = ({ children }) => {
     }
   );
   // response interceptor
-  //we added logoutUser so that when there is 401 error(unauthorized:lacks valid authentication credentials) then the user is logged out. 
+  //we added logoutUser so that when there is 401 error(unauthorized:lacks valid authentication credentials) then the user is logged out.
   authFetch.interceptors.response.use(
     (response) => {
       return response;
@@ -203,9 +204,12 @@ const AppProvider = ({ children }) => {
     dispatch({
       type: HANDLE_CHANGE,
       payload: { name, value },
-    })
-  }
+    });
+  };
 
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
   return (
     <AppContext.Provider
       value={{
@@ -217,6 +221,7 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         handleChange,
+        clearValues,
       }}
     >
       {children}

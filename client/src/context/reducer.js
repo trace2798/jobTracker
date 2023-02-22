@@ -14,6 +14,7 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
+  CLEAR_VALUES,
 } from "./actions";
 
 // using initial state for logout.
@@ -143,9 +144,22 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
-//  action type is HANDLE_CHANGE it returns a new state object with the value of the action payload name set to the value of the action payload value.
+  //  action type is HANDLE_CHANGE it returns a new state object with the value of the action payload name set to the value of the action payload value.
   if (action.type === HANDLE_CHANGE) {
     return { ...state, [action.payload.name]: action.payload.value };
+  }
+
+  if (action.type === CLEAR_VALUES) {
+    const initialState = {
+      isEditing: false,
+      editJobId: "",
+      position: "",
+      company: "",
+      jobLocation: state.userLocation,
+      jobType: "full-time",
+      status: "pending",
+    };
+    return { ...state, ...initialState };
   }
 
   throw new Error(`no such action :${action.type}`);
