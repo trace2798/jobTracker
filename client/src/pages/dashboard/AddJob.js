@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormRow, Alert } from "../../components";
+import { FormRow, Alert, FormRowSelect } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
@@ -64,7 +64,9 @@ const AddJob = () => {
 
           {/* job type */}
           <div className="form-row">
-            <label>job type</label>
+            <label htmlFor="jobType" className="form-label">
+              job type
+            </label>
             <select
               name="jobType"
               value={jobType}
@@ -77,10 +79,39 @@ const AddJob = () => {
                   <option key={index} value={jobtype}>
                     {jobtype}
                   </option>
-                )
+                );
               })}
             </select>
           </div>
+
+          {/* Job status */}
+          <div className="form-row">
+            <label htmlFor="jobStatus" className="form-label">
+              Status
+            </label>
+            <select
+              name="jobType"
+              value={jobType}
+              handleChange={handleJobInput}
+              className="form-select"
+            >
+              {/* default value in the state is full-time*/}
+              {statusOptions.map((statusoptions, index) => {
+                return (
+                  <option key={index} value={statusoptions}>
+                    {statusoptions}
+                  </option>
+                );
+              })}
+            </select>
+          </div> 
+        {/* we can also use <FormRowSelect/> like the example below instead of hard coding it. */}
+          {/* <FormRowSelect
+            name="status"
+            value={status}
+            handleChange={handleJobInput}
+            list={statusOptions}
+          /> */}
 
           <div>
             <button
