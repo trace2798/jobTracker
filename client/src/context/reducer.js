@@ -15,6 +15,9 @@ import {
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_ERROR,
+  CREATE_JOB_SUCCESS,
 } from "./actions";
 
 // using initial state for logout.
@@ -160,6 +163,28 @@ const reducer = (state, action) => {
       status: "pending",
     };
     return { ...state, ...initialState };
+  }
+
+  if (action.type === CREATE_JOB_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === CREATE_JOB_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'New Job Created!',
+    };
+  }
+  if (action.type === CREATE_JOB_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
+    };
   }
 
   throw new Error(`no such action :${action.type}`);

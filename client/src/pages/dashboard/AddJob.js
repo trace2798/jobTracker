@@ -17,6 +17,7 @@ const AddJob = () => {
     statusOptions,
     handleChange,
     clearValues,
+    createJob,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -25,12 +26,16 @@ const AddJob = () => {
       displayAlert();
       return;
     }
-    console.log("create job");
+    if(isEditing) {
+      return ;
+    }
+    createJob();
   };
 
   const handleJobInput = (e) => {
     handleChange({ name: e.target.name, value: e.target.value });
   };
+
   return (
     <Wrapper>
       <form className="form">
@@ -41,7 +46,7 @@ const AddJob = () => {
         <div className="form-center">
           <FormRow
             type="text"
-            name="Position"
+            name="position"
             value={position}
             handleChange={handleJobInput}
           />
@@ -61,8 +66,10 @@ const AddJob = () => {
             handleChange={handleJobInput}
           />
 
+          {/* Instead of hard coding we will use <FormRowSelect/> component for job status and job type. */}
           {/* job type */}
-          <div className="form-row">
+          
+          {/* <div className="form-row">
             <label htmlFor="jobType" className="form-label">
               job type
             </label>
@@ -72,7 +79,7 @@ const AddJob = () => {
               handleChange={handleJobInput}
               className="form-select"
             >
-              {/* default value in the state is full-time */}
+              {/* default value in the state is full-time 
               {jobTypeOptions.map((jobtype, index) => {
                 return (
                   <option key={index} value={jobtype}>
@@ -81,20 +88,20 @@ const AddJob = () => {
                 );
               })}
             </select>
-          </div>
+          </div> */}
 
           {/* Job status */}
-          <div className="form-row">
+          
+          {/* <div className="form-row">
             <label htmlFor="jobStatus" className="form-label">
               Status
             </label>
             <select
               name="status"
               value={status}
-              handleChange={handleJobInput}
+              handleChange={handleStatusInput}
               className="form-select"
             >
-              {/* default value in the state is full-time */}
               {statusOptions.map((statusoptions, index) => {
                 return (
                   <option key={index} value={statusoptions}>
@@ -103,14 +110,20 @@ const AddJob = () => {
                 );
               })}
             </select>
-          </div> 
-          {/* we can also use <FormRowSelect/> like the example below instead of hard coding it. */}
-          {/* <FormRowSelect
+          </div>  */}
+
+          <FormRowSelect
+            name="jobType"
+            value={jobType}
+            handleChange={handleJobInput}
+            list={jobTypeOptions}
+          />
+          <FormRowSelect
             name="status"
             value={status}
             handleChange={handleJobInput}
             list={statusOptions}
-          /> */}
+          />
 
           <div className="btn-container">
             <button
