@@ -13,6 +13,7 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  HANDLE_CHANGE,
 } from "./actions";
 
 // using initial state for logout.
@@ -141,6 +142,10 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+//  action type is HANDLE_CHANGE it returns a new state object with the value of the action payload name set to the value of the action payload value.
+  if (action.type === HANDLE_CHANGE) {
+    return { ...state, [action.payload.name]: action.payload.value };
   }
 
   throw new Error(`no such action :${action.type}`);

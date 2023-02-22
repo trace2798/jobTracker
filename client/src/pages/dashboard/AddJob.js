@@ -15,6 +15,7 @@ const AddJob = () => {
     jobTypeOptions,
     status,
     statusOptions,
+    handleChange,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -27,11 +28,8 @@ const AddJob = () => {
   };
 
   const handleJobInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    console.log(`${name}:${value}`);
+    handleChange({ name: e.target.name, value: e.target.value });
   };
-
   return (
     <Wrapper>
       <form className="form">
@@ -90,12 +88,12 @@ const AddJob = () => {
               Status
             </label>
             <select
-              name="jobType"
-              value={jobType}
+              name="status"
+              value={status}
               handleChange={handleJobInput}
               className="form-select"
             >
-              {/* default value in the state is full-time*/}
+              {/* default value in the state is full-time */}
               {statusOptions.map((statusoptions, index) => {
                 return (
                   <option key={index} value={statusoptions}>
@@ -105,7 +103,7 @@ const AddJob = () => {
               })}
             </select>
           </div> 
-        {/* we can also use <FormRowSelect/> like the example below instead of hard coding it. */}
+          {/* we can also use <FormRowSelect/> like the example below instead of hard coding it. */}
           {/* <FormRowSelect
             name="status"
             value={status}
