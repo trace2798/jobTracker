@@ -12,6 +12,9 @@ import {
   LOGIN_USER_SUCCESS,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -35,6 +38,35 @@ const AppProvider = ({ children }) => {
   // {The first argument, reducer, is a function that takes in the current state and an action as parameters and returns a new state based on the action performed. The reducer function is called by the dispatch function which is the second element in the array returned by the useReducer hook. dispatch is a function that accepts an action and uses the reducer function to update the state. The second argument, initialState, is the initial value of the state. It can be an object, an array, or any other data type. The useReducer hook returns an array with two elements: state and dispatch. state is the current value of the state, and dispatch is a function that allows you to update the state.}
   // Is a declaration of a state and dispatch function using the useReducer hook in React.
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+  });
+
+  //request interceptor
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  // response interceptor
+  //we added logoutUser so that when there is 401 error(unauthorized:lacks valid authentication credentials) then the user is logged out. 
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      if (error.response.status === 401) {
+        logoutUser();
+      }
+      return Promise.reject(error);
+    }
+  );
 
   // When the user clicks the button, display the alert and then clear the alert.
   const displayAlert = () => {
@@ -129,9 +161,32 @@ const AppProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER })
-    removeUserFromLocalStorage()
-  }
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
+
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+
+      const { user, token, location } = data;
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, token, location },
+      });
+
+      addUserToLocalStorage({ user, token, location });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { mag: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
 
   return (
     <AppContext.Provider
@@ -142,6 +197,7 @@ const AppProvider = ({ children }) => {
         loginUser,
         toggleSidebar,
         logoutUser,
+        updateUser,
       }}
     >
       {children}

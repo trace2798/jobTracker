@@ -10,6 +10,9 @@ import {
   LOGIN_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
 
 // using initial state for logout.
@@ -44,6 +47,7 @@ const reducer = (state, action) => {
   if (action.type === REGISTER_USER_BEGIN) {
     return { ...state, isLoading: true };
   }
+
   if (action.type === REGISTER_USER_SUCCESS) {
     return {
       ...state,
@@ -72,6 +76,7 @@ const reducer = (state, action) => {
       isLoading: true,
     };
   }
+
   if (action.type === LOGIN_USER_SUCCESS) {
     return {
       ...state,
@@ -81,16 +86,17 @@ const reducer = (state, action) => {
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
       showAlert: true,
-      alertType: 'success',
-      alertText: 'Login Successful! Redirecting...',
+      alertType: "success",
+      alertText: "Login Successful! Redirecting...",
     };
   }
+
   if (action.type === LOGIN_USER_ERROR) {
     return {
       ...state,
       isLoading: false,
       showAlert: true,
-      alertType: 'danger',
+      alertType: "danger",
       alertText: action.payload.msg,
     };
   }
@@ -104,8 +110,36 @@ const reducer = (state, action) => {
       ...initialState,
       user: null,
       token: null,
-      userLocation: '',
-      jobLocation: '',
+      userLocation: "",
+      jobLocation: "",
+    };
+  }
+
+  if (action.type === UPDATE_USER_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === UPDATE_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      token: action.payload.token,
+      user: action.payload.user,
+      userLocation: action.payload.location,
+      jobLocation: action.payload.location,
+      showAlert: true,
+      alertType: "success",
+      alertText: "User Profile Updated!",
+    };
+  }
+
+  if (action.type === UPDATE_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
     };
   }
 
