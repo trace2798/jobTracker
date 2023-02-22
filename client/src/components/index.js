@@ -9,4 +9,18 @@ import SearchContainer from "./SearchContainer";
 import JobsContainer from "./JobsContainer";
 import Job from "./Job";
 import JobInfo from "./JobInfo";
-export { Alert, FormRow, Logo, Navbar, SmallSidebar, BigSidebar, FormRowSelect, SearchContainer, JobsContainer, JobInfo, Job};
+import Loading from "./Loading";
+export {
+  Alert,
+  FormRow,
+  Logo,
+  Navbar,
+  SmallSidebar,
+  BigSidebar,
+  FormRowSelect,
+  SearchContainer,
+  JobsContainer,
+  JobInfo,
+  Job,
+  Loading,
+};
