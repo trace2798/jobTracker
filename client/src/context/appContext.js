@@ -31,6 +31,16 @@ export const initialState = {
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
+  //we will have the option to edit the job fields. 
+  isEditing: false,
+  editJobId: '',
+  position: '',
+  company: '',
+  // jobLocation is already on top
+  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
+  jobType: 'full-time',
+  statusOptions: ['pending', 'interview', 'declined'],
+  status: 'pending',
 };
 const AppContext = React.createContext();
 
