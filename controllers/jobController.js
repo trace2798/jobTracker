@@ -50,8 +50,28 @@ const getAllJobs = async (req, res) => {
       queryObject.jobType = jobType;
     }
 
+    if(search){
+      //$regex is a MongoDB operator that allows you to perform regular expression (regex) pattern matching on a string field in a collection. It can be used in conjunction with other operators such as $match, $find, and $aggregate to filter or manipulate data.
+      //With this setup we are not looking for the exact text but looking for positions where the text exists in general 
+      //$options: 'i': Perform a case-insensitive search
+      queryObject.position = { $regex: search, $options: 'i' };
+    }
+
     //passing the object created above
     let result = Job.find(queryObject);
+
+    if (sort === 'latest') {
+      result = result.sort('-createdAt');
+    }
+    if (sort === 'oldest') {
+      result = result.sort('createdAt');
+    }
+    if (sort === 'a-z') {
+      result = result.sort('position');
+    }
+    if (sort === 'z-a') {
+      result = result.sort('-position');
+    }
 
     const jobs = await result;
     
