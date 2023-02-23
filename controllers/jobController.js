@@ -4,6 +4,7 @@ import { BadRequestError, NotFoundError } from "../errors/index.js";
 import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
 import moment from "moment";
+
 const createJob = async (req, res) => {
   const { position, company } = req.body;
 
@@ -32,8 +33,28 @@ const deleteJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find({ createdBy: req.user.userId });
+    //grabbing all the string parameters.
+    const { status, jobType, sort, search } = req.query;
 
+    //setting up the object
+    const queryObject = {
+      createdBy: req.user.userId,
+    };
+
+    // if result is not 'interview', 'declined', 'pending' then return all.
+    if (status && status !== 'all') {
+      queryObject.status = status;
+    }
+  // if result is not 'full-time', 'part-time', 'remote', 'internship' then return all.
+    if (jobType  && jobType!== 'all') {
+      queryObject.jobType = jobType;
+    }
+
+    //passing the object created above
+    let result = Job.find(queryObject);
+
+    const jobs = await result;
+    
   res
     .status(StatusCodes.OK)
     .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
@@ -127,8 +148,7 @@ const showStats = async (req, res) => {
       return { date, count };
     })
     .reverse();
-    //We use reverse because instead of showing the latest month first we show the oldest month first
-
+  //We use reverse because instead of showing the latest month first we show the oldest month first
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
 
