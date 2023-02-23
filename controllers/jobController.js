@@ -73,11 +73,23 @@ const getAllJobs = async (req, res) => {
       result = result.sort('-position');
     }
 
+    //Pagination
+    //if page is not specified it will take the default value which is 1 in our case.
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    //whatever is the page -1 x Limit. Eg. for page 2 it will skip (2-1)*10=10.
+    const skip = (page - 1) * limit;
+    result = result.skip(skip).limit(limit);
+
     const jobs = await result;
+    //To show total jobs for the particular user taking in account the limit and skip
+    const totalJobs = await Job.countDocuments(queryObject);
+    //to show total number of pages taking in account the limit and skip
+    const numOfPages = Math.ceil(totalJobs / limit);
     
   res
     .status(StatusCodes.OK)
-    .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
+    .json({ jobs, totalJobs, numOfPages });
 };
 
 const updateJob = async (req, res) => {
