@@ -10,6 +10,11 @@ import JobsContainer from "./JobsContainer";
 import Job from "./Job";
 import JobInfo from "./JobInfo";
 import Loading from "./Loading";
+import StatsContainer from "./StatsContainer";
+import ChartsContainer from "./ChartsContainer";
+import StatItem from "./StatItem";
+import BarChart from "./BarChart";
+import AreaChart from "./AreaChart";
 export {
   Alert,
   FormRow,
@@ -23,4 +28,9 @@ export {
   JobInfo,
   Job,
   Loading,
+  StatsContainer,
+  ChartsContainer,
+  StatItem,
+  BarChart,
+  AreaChart,
 };

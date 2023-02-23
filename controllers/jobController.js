@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/index.js";
 import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
-
+import moment from "moment";
 const createJob = async (req, res) => {
   const { position, company } = req.body;
 
@@ -71,7 +71,7 @@ const updateJob = async (req, res) => {
 };
 
 const showStats = async (req, res) => {
-  //For our stats we will use aggregation pipeline. 
+  //For our stats we will use aggregation pipeline.
   let stats = await Job.aggregate([
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     { $group: { _id: "$status", count: { $sum: 1 } } },
@@ -88,7 +88,47 @@ const showStats = async (req, res) => {
     interview: stats.interview || 0,
     declined: stats.declined || 0,
   };
-  let monthlyApplications = [];
+  //we again run aggregate pipeline on monthlyApplications
+  let monthlyApplications = await Job.aggregate([
+    //grab all jobs based on user id.
+    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
+    {
+      //grouping them on 2 conditions. Year and month.
+      $group: {
+        _id: {
+          year: {
+            $year: "$createdAt",
+          },
+          month: {
+            $month: "$createdAt",
+          },
+        },
+        //We are using the createdAT property above so we will count how many jobs were created in that month in that specific year
+        count: { $sum: 1 },
+      },
+    },
+    //showcasing the last 6 months since we are getting all the jobs back we are using limit.
+    //latest jobs first thats why -1.
+    { $sort: { "_id.year": -1, "_id.month": -1 } },
+    { $limit: 12 },
+  ]);
+  //refactoring the monthlyApplications with moment
+  monthlyApplications = monthlyApplications
+    .map((item) => {
+      const {
+        _id: { year, month },
+        count,
+      } = item;
+      // accepts 0-11
+      const date = moment()
+        .month(month - 1)
+        .year(year)
+        .format("MMM Y");
+      return { date, count };
+    })
+    .reverse();
+    //We use reverse because instead of showing the latest month first we show the oldest month first
+
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
 
