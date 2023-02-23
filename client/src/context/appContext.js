@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useContext, useEffect } from "react";
+import React, {  useReducer, useContext, useEffect } from "react";
 import reducer from "./reducer";
 import axios from "axios";
 import {
@@ -30,6 +30,7 @@ import {
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -264,8 +265,9 @@ const AppProvider = ({ children }) => {
 
   const getJobs = async () => {
     //we add the state and it will take the default values unless changed. 
-    const { search, searchStatus, searchType, sort} = state;
-    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    const { search, searchStatus, searchType, sort, page} = state;
+    // let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
     if (search) {
       url = url + `&search=${search}`;
     }
@@ -282,7 +284,7 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       logoutUser();
     }
     clearAlert();
@@ -290,6 +292,7 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     getJobs();
+    //eslint-disable-next-line
   }, []);
 
   const setEditJob = (id) => {
@@ -344,8 +347,8 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
-      // logoutUser()
+      // console.log(error.response);
+      logoutUser()
     }
 
     clearAlert();
@@ -354,6 +357,10 @@ const AppProvider = ({ children }) => {
   const clearFilters = () => {
     dispatch({ type: CLEAR_FILTERS });
   };
+
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } })
+  }
 
   return (
     <AppContext.Provider
@@ -374,6 +381,7 @@ const AppProvider = ({ children }) => {
         editJob,
         showStats,
         clearFilters,
+        changePage,
       }}
     >
       {children}
