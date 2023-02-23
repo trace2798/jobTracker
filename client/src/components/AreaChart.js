@@ -27,4 +27,4 @@ const AreaChartComponent = ({ data }) => {
   );
 };
 
-export default AreaChartComponent
+export default AreaChartComponent;
