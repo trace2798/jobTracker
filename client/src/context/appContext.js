@@ -376,6 +376,7 @@ const AppProvider = ({ children }) => {
   };
   useEffect(() => {
     getCurrentUser();
+    //eslint-disable-next-line
   }, []);
 
   const clearFilters = () => {
