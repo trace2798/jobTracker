@@ -1,5 +1,6 @@
 import "express-async-errors";
 import express from "express";
+import cookieParser from 'cookie-parser';
 const app = express();
 import dotenv from "dotenv";
 
@@ -26,6 +27,7 @@ import xss from 'xss-clean';
 import mongoSanitize from 'express-mongo-sanitize';
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
