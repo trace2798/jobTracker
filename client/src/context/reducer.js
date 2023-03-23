@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
